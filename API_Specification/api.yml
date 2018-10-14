@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: 'Wrapper Weather API'
+  description: 'It provides average temperature and atmospheric pressure values for next 3 days'
+paths: 
+  /v1/WeatherForecasts/Average:
+    get:
+      operationId: WeatherForecast
+      summary: Weather Forecast average data for the next 3 days (from OpenWeatherMap)
+      parameters:
+        - name: city_name
+          in: query
+          description: City 
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeatherForecastAvg"
+        '400':
+          description: |-
+            Bad Request Data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: |-
+            City not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    WeatherForecastAvg:
+      type: object
+      required:
+        - weatherForecast
+      properties:
+        weatherForecast:
+          $ref: "#/components/schemas/Forecast"
+    Forecast:
+      type: object
+      required:
+        - temperature
+        - atmosphericPressure
+        - validFrom
+        - validTo 
+      properties:
+        validFrom: 
+          type: string
+          format: date-time
+        validTo: 
+          type: string
+          format: date-time
+        temperature: 
+          $ref: "#/components/schemas/AverageTemperature"
+        atmosfericPressure:
+          type: object
+          properties:
+            average:
+              type: number
+    AverageTemperature:
+      type: object
+      required:
+        - averageDaily
+        - averageNightly
+      properties:
+        averageDaily:
+          type: number
+        averageNightly:
+          type: number
