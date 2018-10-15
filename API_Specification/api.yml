@@ -4,17 +4,23 @@ info:
   title: 'Wrapper Weather API'
   description: 'It provides average temperature and atmospheric pressure values for next 3 days'
 paths: 
-  /v1/WeatherForecasts/Average:
+  /v1/WeatherForecasts/average:
     get:
       operationId: WeatherForecast
       summary: Weather Forecast average data for the next 3 days (from OpenWeatherMap)
       parameters:
         - name: city_name
           in: query
-          description: City 
+          description: City name as described by Open Weather Map
           required: true
           schema:
             type: string
+        - name: tz
+          in: query
+          description: Time zone offset (in hours) corresponding to the city with respect to UTC (-x, +x)
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: |-
