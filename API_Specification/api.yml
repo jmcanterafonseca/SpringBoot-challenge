@@ -43,6 +43,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        '503':
+          description: |-
+            Service not available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '422':
+          description: |-
+            Open Weather Map Service responded with something different than 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
