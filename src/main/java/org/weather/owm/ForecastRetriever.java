@@ -7,11 +7,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.boot.json.JsonSimpleJsonParser;
 import org.weather.errors.CityNotFoundError;
 import org.weather.errors.ForecastServiceError;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Map;
 
 /**
@@ -27,6 +27,8 @@ public class ForecastRetriever {
         return ourInstance;
     }
 
+    private static String BASE_OWM_API = "http://api.openweathermap.org/data/2.5/forecast?q={0}&units=metric&APPID={1}";
+
     /**
      * Retrieves a weather forecast for the city passed as parameter
      * Uses Open Weather Map
@@ -36,9 +38,8 @@ public class ForecastRetriever {
      * @throws ForecastServiceError
      */
     public Map<String, Object> retrieve(String city) throws ForecastServiceError, CityNotFoundError {
-        String openWeatherMapUri =
-                "http://api.openweathermap.org/data/2.5/forecast?units=metric&APPID=19ef5669b666490450fae9f6606c4f97";
-        openWeatherMapUri += "&id=524901";
+        String openWeatherMapUri = MessageFormat.format(BASE_OWM_API,
+                new String[]{city,"19ef5669b666490450fae9f6606c4f97"});
 
         HttpGet getRequest = new HttpGet(openWeatherMapUri);
 
@@ -69,6 +70,5 @@ public class ForecastRetriever {
             throw new ForecastServiceError("Status Code: " + statusCode);
         }
     }
-
 }
 

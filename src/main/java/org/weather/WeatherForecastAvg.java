@@ -1,7 +1,9 @@
 package org.weather;
 
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.weather.util.WeatherForecastAvgSerializer;
 
+@JsonSerialize(using = WeatherForecastAvgSerializer.class)
 public class WeatherForecastAvg {
     public String validFrom;
     public String validTo;

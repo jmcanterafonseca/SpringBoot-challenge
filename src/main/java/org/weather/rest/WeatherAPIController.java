@@ -16,11 +16,18 @@ public class WeatherAPIController {
     private ForecastRetriever retriever = ForecastRetriever.getInstance();
     private ForecastAvgCalculator calculator = ForecastAvgCalculator.getInstance();
 
-    @RequestMapping("/data/v1/WeatherForecasts/Average")
-    public String getWeatherForecastAvg(@RequestParam(value = "city") String city) throws ForecastServiceError, CityNotFoundError {
+    @RequestMapping("/data/v1/WeatherForecasts/average")
+    public String getWeatherForecastAvg(@RequestParam(value = "city") String city,
+                                        @RequestParam(value = "tz", required=false) Integer tzOffset)
+            throws ForecastServiceError, CityNotFoundError {
         Map<String, Object> owmForecast = retriever.retrieve(city);
 
-        WeatherForecastAvg forecast = calculator.calculate(owmForecast);
+        // In the absence of timezone UTC it is assumed
+        if (tzOffset == null) {
+            tzOffset = 0;
+        }
+
+        WeatherForecastAvg forecast = calculator.calculate(owmForecast, tzOffset);
 
         return "Greetings from " + city;
     }

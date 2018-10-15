@@ -3,6 +3,7 @@ package org.weather;
 import org.weather.util.AverageHolder;
 import org.weather.util.DataUtil;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,10 +29,12 @@ public class ForecastAvgCalculator {
      * @param openWeatherData
      * @return WeatherForecastAvg object with all the parameters calculated
      */
-    public WeatherForecastAvg calculate(Map<String, Object> openWeatherData) {
+    public WeatherForecastAvg calculate(Map<String, Object> openWeatherData, int tzOffset) {
         Date now = new java.util.Date();
 
-        Date[] interval = calculateInterval(now);
+        TimeZone cityTimezone = TimeZone.getTimeZone("GMT" + new DecimalFormat("+#").format(tzOffset));
+
+        Date[] interval = calculateInterval(now, cityTimezone);
 
         List<Map<String, Object>> forecastEntries = (List<Map<String, Object>>) openWeatherData.get("list");
 
@@ -47,6 +50,7 @@ public class ForecastAvgCalculator {
             long timestamp;
 
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // The original data is always in UTC
             sdf1.setTimeZone(TimeZone.getTimeZone("UTC"));
             try {
                 timestamp = sdf1.parse(timestampText).getTime();
@@ -59,8 +63,9 @@ public class ForecastAvgCalculator {
 
                 pressure.accumulate(DataUtil.getDouble(main, "pressure"));
 
+                // It is needed to check the day / night hours as per the city timezone
                 GregorianCalendar testCal = new GregorianCalendar();
-                testCal.setTimeZone(TimeZone.getTimeZone("UTC"));
+                testCal.setTimeZone(cityTimezone);
                 testCal.setTime(new Date(timestamp));
 
                 double temperature = DataUtil.getDouble(main, "temp");
@@ -76,8 +81,8 @@ public class ForecastAvgCalculator {
 
 
         WeatherForecastAvg forecastAvg = new WeatherForecastAvg();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        sdf.setTimeZone(cityTimezone);
 
         forecastAvg.validFrom = sdf.format(interval[0]);
         forecastAvg.validTo = sdf.format(interval[1]);
@@ -95,12 +100,15 @@ public class ForecastAvgCalculator {
      * @param from Today
      * @return an array of two elements (lower bound, upper bound)
      */
-    private Date[] calculateInterval(Date from) {
+    private Date[] calculateInterval(Date from, TimeZone tz) {
         Date[] out = new Date[2];
 
         Calendar cal = new GregorianCalendar();
-        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        cal.setTimeZone(tz);
         cal.setTime(from);
+
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
 
         cal.add(Calendar.DATE, 1);
         cal.set(Calendar.AM_PM, Calendar.AM);
