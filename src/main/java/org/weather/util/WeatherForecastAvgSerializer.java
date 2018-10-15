@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.weather.WeatherForecastAvg;
+import org.weather.models.WeatherForecastAvg;
 
 import java.io.IOException;
 
@@ -16,6 +16,7 @@ public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastA
             this.temperature = temperature;
             this.atmosphericPressure = pressure;
         }
+
         public String validFrom;
         public String validTo;
         public TemperatureData temperature;
@@ -26,7 +27,7 @@ public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastA
         public double averageNightly;
         public double averageDaily;
 
-        public TemperatureData(double avgDaily,double avgNightly) {
+        public TemperatureData(double avgDaily, double avgNightly) {
             this.averageDaily = avgDaily;
             this.averageNightly = avgNightly;
         }
@@ -36,6 +37,7 @@ public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastA
         public PressureData(double pressure) {
             this.average = pressure;
         }
+
         public double average;
     }
 
@@ -54,12 +56,12 @@ public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastA
 
         jgen.writeStartObject();
 
-        TemperatureData tdata = new TemperatureData(value.avgTemperatureDaily,value.avgTemperatureNightly);
+        TemperatureData tdata = new TemperatureData(value.avgTemperatureDaily, value.avgTemperatureNightly);
         PressureData pdata = new PressureData(value.avgPressure);
 
-        Fields f = new Fields(value.validFrom,value.validTo,tdata,pdata);
+        Fields f = new Fields(value.validFrom, value.validTo, tdata, pdata);
 
-        jgen.writeObjectField("weatherForecast",f);
+        jgen.writeObjectField("weatherForecast", f);
 
         jgen.writeEndObject();
     }

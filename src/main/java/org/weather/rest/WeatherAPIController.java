@@ -4,31 +4,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.weather.ForecastAvgCalculator;
-import org.weather.WeatherForecastAvg;
-import org.weather.errors.CityNotFoundError;
-import org.weather.errors.ForecastServiceError;
-import org.weather.errors.NetworkError;
+import org.weather.errors.*;
+import org.weather.models.WeatherForecastAvg;
 import org.weather.owm.ForecastRetriever;
 
 import java.util.Map;
 
 @RestController
 public class WeatherAPIController {
-    private ForecastRetriever retriever = ForecastRetriever.getInstance();
+
     private ForecastAvgCalculator calculator = ForecastAvgCalculator.getInstance();
 
     @RequestMapping("/data/v1/WeatherForecasts/average")
     public WeatherForecastAvg getWeatherForecastAvg(@RequestParam(value = "city") String city,
-                                        @RequestParam(value = "tz", required=false) Integer tzOffset)
-            throws ForecastServiceError, CityNotFoundError, NetworkError {
-        Map<String, Object> owmForecast = retriever.retrieve(city);
+                                                    @RequestParam(value = "tz", required = false) Integer tzOffset)
+            throws ApiError {
 
         // In the absence of timezone UTC it is assumed
         if (tzOffset == null) {
             tzOffset = 0;
         }
 
-        WeatherForecastAvg forecast = calculator.calculate(owmForecast, tzOffset);
+        WeatherForecastAvg forecast = calculator.calculate(city, tzOffset);
 
         return forecast;
     }

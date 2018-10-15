@@ -39,9 +39,9 @@ public class ForecastRetriever {
      * @return
      * @throws ForecastServiceError
      */
-    public Map<String, Object> retrieve(String city) throws ForecastServiceError, CityNotFoundError,NetworkError {
+    public Map<String, Object> retrieve(String city) throws ForecastServiceError, CityNotFoundError, NetworkError {
         String openWeatherMapUri = MessageFormat.format(BASE_OWM_API,
-                new String[]{URLEncoder.encode(city),"19ef5669b666490450fae9f6606c4f97"});
+                new String[]{URLEncoder.encode(city), "19ef5669b666490450fae9f6606c4f97"});
 
         HttpGet getRequest = new HttpGet(openWeatherMapUri);
 
@@ -60,8 +60,7 @@ public class ForecastRetriever {
             String forecastData;
             try {
                 forecastData = EntityUtils.toString(result.getEntity(), "UTF-8");
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 throw new NetworkError(ioe.getMessage());
             }
             JsonParser parser = JsonParserFactory.getJsonParser();

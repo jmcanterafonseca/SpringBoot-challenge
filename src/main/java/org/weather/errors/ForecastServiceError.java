@@ -1,6 +1,6 @@
 package org.weather.errors;
 
-public class ForecastServiceError extends Exception {
+public class ForecastServiceError extends ApiError {
     // Status code returned by Open Weather Map API
     public int statusCode;
 

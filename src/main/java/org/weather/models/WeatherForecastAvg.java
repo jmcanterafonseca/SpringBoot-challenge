@@ -1,4 +1,4 @@
-package org.weather;
+package org.weather.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.weather.util.WeatherForecastAvgSerializer;
