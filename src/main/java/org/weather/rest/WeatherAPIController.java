@@ -7,6 +7,7 @@ import org.weather.ForecastAvgCalculator;
 import org.weather.WeatherForecastAvg;
 import org.weather.errors.CityNotFoundError;
 import org.weather.errors.ForecastServiceError;
+import org.weather.errors.NetworkError;
 import org.weather.owm.ForecastRetriever;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class WeatherAPIController {
     @RequestMapping("/data/v1/WeatherForecasts/average")
     public WeatherForecastAvg getWeatherForecastAvg(@RequestParam(value = "city") String city,
                                         @RequestParam(value = "tz", required=false) Integer tzOffset)
-            throws ForecastServiceError, CityNotFoundError {
+            throws ForecastServiceError, CityNotFoundError, NetworkError {
         Map<String, Object> owmForecast = retriever.retrieve(city);
 
         // In the absence of timezone UTC it is assumed

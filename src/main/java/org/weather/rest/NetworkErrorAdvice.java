@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.weather.errors.ApiErrorData;
 import org.weather.errors.ForecastServiceError;
+import org.weather.errors.NetworkError;
 
 @ControllerAdvice
-public class ForecastServiceErrorAdvice {
+public class NetworkErrorAdvice {
     @ResponseBody
-    @ExceptionHandler(ForecastServiceError.class)
-    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
-    ApiErrorData serviceError(ForecastServiceError ex) {
-        return new ApiErrorData(ex.statusCode,ex.getMessage());
+    @ExceptionHandler(NetworkError.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    ApiErrorData serviceError(NetworkError ex) {
+        return new ApiErrorData(HttpStatus.SERVICE_UNAVAILABLE.value(),ex.getMessage());
     }
 }

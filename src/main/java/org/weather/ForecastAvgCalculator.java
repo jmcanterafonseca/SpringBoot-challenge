@@ -33,7 +33,7 @@ public class ForecastAvgCalculator {
     public WeatherForecastAvg calculate(Map<String, Object> openWeatherData, int tzOffset) {
         Date now = new java.util.Date();
 
-        TimeZone cityTimezone = TimeZone.getTimeZone("GMT" + new DecimalFormat("+#").format(tzOffset));
+        TimeZone cityTimezone = TimeZone.getTimeZone("GMT" + String.format("%+d", tzOffset));
 
         Date[] interval = calculateInterval(now, cityTimezone);
 
