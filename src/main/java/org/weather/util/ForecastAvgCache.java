@@ -3,7 +3,7 @@ package org.weather.util;
 import org.weather.models.WeatherForecastAvg;
 
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * A cache that holds average WeatherForecasts indexed by city
@@ -24,6 +24,7 @@ public class ForecastAvgCache {
         public Date timestamp;
         public WeatherForecastAvg forecast;
         public String city;
+        public boolean outdated = false;
 
         public CacheEntry(String city, WeatherForecastAvg forecast, Date timestamp) {
             this.forecast = forecast;
@@ -32,17 +33,17 @@ public class ForecastAvgCache {
         }
     }
 
-    private Hashtable<String, CacheEntry> entries = new Hashtable<>();
+    private HashMap<String, CacheEntry> entries = new HashMap<>();
 
-    public WeatherForecastAvg get(String city) {
+    public  WeatherForecastAvg get(String city) {
         WeatherForecastAvg out = null;
 
         CacheEntry entry = entries.get(city);
-        if (entry != null) {
+        if (entry != null && !entry.outdated) {
             long now = new Date().getTime();
 
             if (now > (entry.timestamp.getTime() + timeout)) {
-                entries.remove(city);
+                entry.outdated = true;
             } else {
                 out = entry.forecast;
             }
@@ -50,7 +51,7 @@ public class ForecastAvgCache {
         return out;
     }
 
-    public void put(String city, WeatherForecastAvg forecast) {
+    public  void put(String city, WeatherForecastAvg forecast) {
         CacheEntry entry = new CacheEntry(city, forecast, new Date());
 
         entries.put(city, entry);
