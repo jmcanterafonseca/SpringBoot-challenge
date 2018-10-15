@@ -5,7 +5,9 @@ public class AverageHolder {
     private int numEntries;
 
     public double calculateAverage() {
-        return accumulated / numEntries;
+        double value = accumulated / numEntries;
+
+        return Math.round(value * 100.0) / 100.0;
     }
 
     public void accumulate(double value) {

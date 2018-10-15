@@ -9,6 +9,36 @@ import org.weather.WeatherForecastAvg;
 import java.io.IOException;
 
 public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastAvg> {
+    private class Fields {
+        public Fields(String validFrom, String validTo, TemperatureData temperature, PressureData pressure) {
+            this.validFrom = validFrom;
+            this.validTo = validTo;
+            this.temperature = temperature;
+            this.atmosphericPressure = pressure;
+        }
+        public String validFrom;
+        public String validTo;
+        public TemperatureData temperature;
+        public PressureData atmosphericPressure;
+    }
+
+    private class TemperatureData {
+        public double averageNightly;
+        public double averageDaily;
+
+        public TemperatureData(double avgDaily,double avgNightly) {
+            this.averageDaily = avgDaily;
+            this.averageNightly = avgNightly;
+        }
+    }
+
+    private class PressureData {
+        public PressureData(double pressure) {
+            this.average = pressure;
+        }
+        public double average;
+    }
+
     public WeatherForecastAvgSerializer() {
         this(null);
     }
@@ -23,9 +53,14 @@ public class WeatherForecastAvgSerializer extends StdSerializer<WeatherForecastA
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
-        jgen.writeNumberField("weatherForecast", value.id);
-        jgen.writeStringField("itemName", value.itemName);
-        jgen.writeNumberField("owner", value.owner.id);
+
+        TemperatureData tdata = new TemperatureData(value.avgTemperatureDaily,value.avgTemperatureNightly);
+        PressureData pdata = new PressureData(value.avgPressure);
+
+        Fields f = new Fields(value.validFrom,value.validTo,tdata,pdata);
+
+        jgen.writeObjectField("weatherForecast",f);
+
         jgen.writeEndObject();
     }
 }

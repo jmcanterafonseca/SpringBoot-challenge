@@ -17,7 +17,7 @@ public class WeatherAPIController {
     private ForecastAvgCalculator calculator = ForecastAvgCalculator.getInstance();
 
     @RequestMapping("/data/v1/WeatherForecasts/average")
-    public String getWeatherForecastAvg(@RequestParam(value = "city") String city,
+    public WeatherForecastAvg getWeatherForecastAvg(@RequestParam(value = "city") String city,
                                         @RequestParam(value = "tz", required=false) Integer tzOffset)
             throws ForecastServiceError, CityNotFoundError {
         Map<String, Object> owmForecast = retriever.retrieve(city);
@@ -29,6 +29,6 @@ public class WeatherAPIController {
 
         WeatherForecastAvg forecast = calculator.calculate(owmForecast, tzOffset);
 
-        return "Greetings from " + city;
+        return forecast;
     }
 }

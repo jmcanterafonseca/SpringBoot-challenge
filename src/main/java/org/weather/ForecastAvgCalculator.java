@@ -28,6 +28,7 @@ public class ForecastAvgCalculator {
      *
      * @param openWeatherData
      * @return WeatherForecastAvg object with all the parameters calculated
+     *
      */
     public WeatherForecastAvg calculate(Map<String, Object> openWeatherData, int tzOffset) {
         Date now = new java.util.Date();
