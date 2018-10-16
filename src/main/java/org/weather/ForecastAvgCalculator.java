@@ -1,5 +1,6 @@
 package org.weather;
 
+import org.springframework.core.env.Environment;
 import org.weather.errors.*;
 import org.weather.models.WeatherForecastAvg;
 import org.weather.util.ForecastAvgCache;
@@ -18,7 +19,7 @@ public class ForecastAvgCalculator {
     private int MAX_TZ_OFFSET = 14;
 
     // 1 hour timeout
-    private ForecastAvgCache cache = new ForecastAvgCache(1 * 60 * 60);
+    private ForecastAvgCache cache = new ForecastAvgCache();
 
     private ForecastRetriever retriever = ForecastRetriever.getInstance();
 
@@ -28,8 +29,19 @@ public class ForecastAvgCalculator {
     }
 
 
+    public static ForecastAvgCalculator getInstance(String owmKey, int cacheTimeout) {
+        ourInstance.setConfig(owmKey, cacheTimeout);
+
+        return ourInstance;
+    }
+
     public static ForecastAvgCalculator getInstance() {
         return ourInstance;
+    }
+
+    public void setConfig(String owmKey, int cacheTimeout) {
+        retriever.setKey(owmKey);
+        cache.setTimeout(cacheTimeout);
     }
 
     /**

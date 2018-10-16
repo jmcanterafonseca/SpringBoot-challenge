@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.weather.errors.ApiErrorData;
 import org.weather.errors.BadRequestError;
-import org.weather.errors.CityNotFoundError;
 
 @ControllerAdvice
 public class BadRequestAdvice {

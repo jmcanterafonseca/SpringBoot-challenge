@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 /**
  * A cache that holds average WeatherForecasts indexed by city
+ * A timeout policy is implemented to avoid caching forever
+ *
  */
 public class ForecastAvgCache {
     private long timeout;
@@ -14,10 +16,24 @@ public class ForecastAvgCache {
     /**
      * After timeout has elapsed the entry is considered as invalid
      *
-     * @param timeout (in seconds)
+     * @param timeout (in minutes)
      */
-    public ForecastAvgCache(long timeout) {
-        this.timeout = timeout * 1000;
+    public ForecastAvgCache(int timeout) {
+        setTimeout(timeout);
+    }
+
+    public ForecastAvgCache() {
+
+    }
+
+    /**
+     *
+     *  Timeout is expressed in minutes
+     *
+     * @param timeout
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout * 60 * 1000;
     }
 
     private class CacheEntry {

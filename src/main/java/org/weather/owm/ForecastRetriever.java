@@ -22,6 +22,8 @@ import java.util.Map;
 public class ForecastRetriever {
     private static ForecastRetriever ourInstance = new ForecastRetriever();
 
+    private String owmKey;
+
     private ForecastRetriever() {
     }
 
@@ -30,6 +32,10 @@ public class ForecastRetriever {
     }
 
     private static String BASE_OWM_API = "http://api.openweathermap.org/data/2.5/forecast?q={0}&units=metric&APPID={1}";
+
+    public void setKey(String owmKey) {
+        this.owmKey = owmKey;
+    }
 
     /**
      * Retrieves a weather forecast for the city passed as parameter
@@ -41,7 +47,7 @@ public class ForecastRetriever {
      */
     public Map<String, Object> retrieve(String city) throws ForecastServiceError, CityNotFoundError, NetworkError {
         String openWeatherMapUri = MessageFormat.format(BASE_OWM_API,
-                new String[]{URLEncoder.encode(city), "19ef5669b666490450fae9f6606c4f97"});
+                new Object[]{URLEncoder.encode(city), owmKey});
 
         HttpGet getRequest = new HttpGet(openWeatherMapUri);
 
