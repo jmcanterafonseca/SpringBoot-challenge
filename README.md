@@ -41,4 +41,4 @@ documentation provided by Open Weather Map.
 * Unit tests are needed. Need to investigate how to do it with Spring Boot. 
 * More functional tests are needed (for testing errors, especially)
 * I was unable to handle properly REST framework errors, despite having created https://github.com/jmcanterafonseca/SpringBoot_Experiments/blob/master/src/main/java/org/weather/rest/RestErrorAdvice.java
-
+* Trace Logging System needed to avoid the usage of some `System.out.println`
