@@ -9,7 +9,7 @@ paths:
       operationId: WeatherForecast
       summary: Weather Forecast average data for the next 3 days (from OpenWeatherMap)
       parameters:
-        - name: city_name
+        - name: city
           in: query
           description: City name as described by Open Weather Map
           required: true
